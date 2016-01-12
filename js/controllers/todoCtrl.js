@@ -29,7 +29,7 @@
 		// Get all todos
 	    $http.get('https://blooming-falls-2697.herokuapp.com/api/v1/todos')
 	        .success(function(data) {
-	            TC.todoData = data;
+	            TC.todos = data;
 	            console.log(data);
 	        })
 	        .error(function(error) {
