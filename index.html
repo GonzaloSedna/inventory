@@ -2,28 +2,47 @@
 <html lang="en" ng-app="todomvc" data-framework="angularjs">
 	<head>
 		<meta charset="utf-8">
-		<title>AngularJS • TodoMVC</title>
+		<title>Food Inventory</title>
 		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
 		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/styles.css">
 		<style>[ng-cloak] { display: none; }</style>
 	</head>
 	<body>
 		<section id="todoapp" ng-controller="TodoCtrl as TC">
 			<header id="header">
-				<h1>todos</h1>
+				<h1>Food inventory</h1>
 				<form id="todo-form" ng-submit="TC.addTodo()">
-					<input id="new-todo" placeholder="What needs to be done?" ng-model="TC.newTodo.title" autofocus>
+					<input id="new-todo" placeholder="¿Empanada?" ng-model="TC.newTodo.title" autofocus>
+					<div id="use-level" ng-click="TC.showLevels = !TC.showLevels">
+						<span class="level">
+							<i class="fa fa-battery-{{TC.level}}"></i>
+						</span>
+					</div>
+					<div id="level-select" ng-class="{'active': TC.showLevels}">
+						<div
+						  class="level-select-wrapper"
+						  ng-repeat="l in TC.levels"
+						  ng-click="TC.setLevel(l)"
+						  >
+						    <span class="level">
+						    	<i class="fa fa-battery-{{l}}"></i>
+						    </span>
+						</div>
+					</div>
 				</form>
 			</header>
 			<section id="main" ng-show="TC.todos.length" ng-cloak>
 				<input id="toggle-all" type="checkbox" ng-model="TC.allChecked" ng-click="TC.markAll(TC.allChecked)">
-				<label for="toggle-all">Mark all as complete</label>
+				<label for="toggle-all">Finish all</label>
 				<ul id="todo-list">
 					<li ng-repeat="todo in TC.todos | filter:TC.statusFilter track by $index" 
 						ng-class="{completed: todo.completed, editing: todo === TC.editedTodo}">
 						<div class="view">
 							<input class="toggle" type="checkbox" ng-model="todo.completed">
 							<label ng-dblclick="TC.editTodo(todo)">{{todo.title}}</label>
+							<span><i class="fa fa-battery-{{todo.level}}"></i></span>
 							<button class="destroy" ng-click="TC.removeTodo($index)"></button>
 						</div>
 						<form ng-submit="TC.doneEditing(todo, $index)">
@@ -39,31 +58,25 @@
 			</section>
 			<footer id="footer" ng-show="TC.todos.length" ng-cloak>
 				<span id="todo-count"><strong>{{TC.remainingCount}}</strong>
-					<ng-pluralize count="TC.remainingCount" when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
+					<ng-pluralize count="TC.remainingCount" when="{ one: 'thing to use', other: 'things to use' }"></ng-pluralize>
 				</span>
 				<ul id="filters">
 					<li>
 						<a ng-class="{selected: TC.location.path() == '/'} " href="#/">All</a>
 					</li>
 					<li>
-						<a ng-class="{selected: TC.location.path() == '/active'}" href="#/active">Active</a>
+						<a ng-class="{selected: TC.location.path() == '/active'}" href="#/active">To use</a>
 					</li>
 					<li>
-						<a ng-class="{selected: TC.location.path() == '/completed'}" href="#/completed">Completed</a>
+						<a ng-class="{selected: TC.location.path() == '/completed'}" href="#/completed">Finished</a>
 					</li>
 				</ul>
-				<button id="clear-completed" ng-click="TC.clearCompletedTodos()" ng-show="TC.remainingCount < TC.todos.length">Clear completed</button>
+				<button id="clear-completed" ng-click="TC.clearCompletedTodos()" ng-show="TC.remainingCount < TC.todos.length">Clear finished</button>
 			</footer>
 		</section>
 		<footer id="info">
-			<p>Double-click to edit a todo</p>
-			<p>Credits:
-				<a href="http://twitter.com/cburgdorf">Christoph Burgdorf</a>,
-				<a href="http://ericbidelman.com">Eric Bidelman</a>,
-				<a href="http://jacobmumm.com">Jacob Mumm</a> and
-				<a href="http://blog.igorminar.com">Igor Minar</a>
-			</p>
-			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+			<p>Double-click to edit an item</p>
+			<p>Based in <a href="http://todomvc.com" target="_blank">TodoMVC</a></p>
 		</footer>
 		<script src="node_modules/todomvc-common/base.js"></script>
 		<script src="node_modules/angular/angular.js"></script>

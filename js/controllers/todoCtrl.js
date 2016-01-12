@@ -22,9 +22,24 @@
 
 		TC.ESCAPE_KEY = 27;
 		TC.editedTodo = {};
+		TC.levels = [1, 2, 3, 4];
+		TC.showLevels = false;
+		TC.level = 2;
+
+		// Get all todos
+	    $http.get('https://blooming-falls-2697.herokuapp.com/api/v1/todos')
+	        .success(function(data) {
+	            TC.todoData = data;
+	            console.log(data);
+	        })
+	        .error(function(error) {
+	            console.log('Error: ' + error);
+	        });
 
 		function resetTodo() {
-			TC.newTodo = {title: '', completed: false};
+			TC.level = 2;
+			TC.newTodo = {title: '',level: TC.level, completed: false};
+			TC.showLevels = false
 		}
 
 		resetTodo();
@@ -53,6 +68,7 @@
 			if (newTitle.length === 0) {
 				return;
 			}
+			TC.newTodo.level = TC.level;
 
 			todos.push(TC.newTodo);
 			resetTodo();
@@ -94,6 +110,11 @@
 				todo.completed = completed;
 			});
 		};
+
+		TC.setLevel = function(level) {
+			TC.level = level;
+			TC.showLevels = !TC.showLevels;
+		}
 	});
 })();
 //jscs:enable

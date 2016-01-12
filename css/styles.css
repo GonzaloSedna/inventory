@@ -1,0 +1,32 @@
+#header h1{font-size: 80px;top: -130px;}
+#header #todo-form #new-todo {display:inline-block;width:90%;}
+#header #todo-form #use-level {display:inline-block;cursor:pointer;color: #d9d9d9;}
+#header #todo-form #use-level:hover{color: #898989}
+
+#header #todo-form #level-select{
+	display: none;
+	z-index: 10;
+	background-color: #fefefd;
+    border-radius: 3px;
+    border: 1px solid #c9c9c9;
+    position: absolute;
+    padding: 0 10px;
+    right: 22px;
+    top: 46px;
+	color: #898989;
+	opacity: 0;
+	-moz-transition: opacity 0.35s ease;
+    -o-transition: opacity 0.35s ease;
+    -webkit-transition: opacity 0.35s ease;
+    transition: opacity 0.35s ease;
+}
+#header #todo-form #level-select.active{
+	display: inline-block;
+	opacity: 1;
+    pointer-events: all;
+}
+#header #todo-form #level-select div{cursor:pointer;}
+
+#main #todo-list li label{display:inline-block;width:67%;}
+#main #todo-list li span{display:inline-block;font-size: .7em;opacity: .7;vertical-align: middle;}
+#main #todo-list li button{right: -10px;top: -10px;bottom:auto;}
