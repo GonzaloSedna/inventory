@@ -16,7 +16,7 @@
 	 * - retrieves and persists the model via the todoStorage service
 	 * - exposes the model to the template and provides event handlers
 	 */
-	.controller('TodoCtrl', function TodoCtrl($scope, $location, todoStorage) {
+	.controller('TodoCtrl', function TodoCtrl($scope, $location, $http, todoStorage) {
 		var TC = this;
 		var todos = TC.todos = todoStorage.get();
 
