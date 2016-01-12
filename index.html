@@ -14,7 +14,7 @@
 			<header id="header">
 				<h1>Food inventory</h1>
 				<form id="todo-form" ng-submit="TC.addTodo()">
-					<input id="new-todo" placeholder="¿Empanada?" ng-model="TC.newTodo.title" autofocus>
+					<input id="new-todo" placeholder="¿Empanada?" ng-model="TC.newTodo.text" autofocus>
 					<div id="use-level" ng-click="TC.showLevels = !TC.showLevels">
 						<span class="level">
 							<i class="fa fa-battery-{{TC.level}}"></i>
@@ -38,9 +38,9 @@
 				<label for="toggle-all">Finish all</label>
 				<ul id="todo-list">
 					<li ng-repeat="todo in TC.todos | filter:TC.statusFilter track by $index" 
-						ng-class="{completed: todo.completed, editing: todo === TC.editedTodo}">
+						ng-class="{completed: todo.complete, editing: todo === TC.editedTodo}">
 						<div class="view">
-							<input class="toggle" type="checkbox" ng-model="todo.completed">
+							<input class="toggle" type="checkbox" ng-model="todo.complete">
 							<label ng-dblclick="TC.editTodo(todo)">{{todo.title}}</label>
 							<span><i class="fa fa-battery-{{todo.level}}"></i></span>
 							<button class="destroy" ng-click="TC.removeTodo($index)"></button>
@@ -48,7 +48,7 @@
 						<form ng-submit="TC.doneEditing(todo, $index)">
 							<input class="edit" 
 								ng-trim="false" 
-								ng-model="todo.title" 
+								ng-model="todo.text" 
 								ng-blur="TC.doneEditing(todo, $index)" 
 								ng-keydown="($event.keyCode === TC.ESCAPE_KEY) && TC.revertEditing($index)" 
 								todo-focus="todo === TC.editedTodo">
