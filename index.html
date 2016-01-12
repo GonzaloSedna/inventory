@@ -41,7 +41,7 @@
 						ng-class="{completed: todo.complete, editing: todo === TC.editedTodo}">
 						<div class="view">
 							<input class="toggle" type="checkbox" ng-model="todo.complete">
-							<label ng-dblclick="TC.editTodo(todo)">{{todo.title}}</label>
+							<label ng-dblclick="TC.editTodo(todo)">{{todo.text}}</label>
 							<span><i class="fa fa-battery-{{todo.level}}"></i></span>
 							<button class="destroy" ng-click="TC.removeTodo($index)"></button>
 						</div>
