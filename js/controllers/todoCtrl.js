@@ -38,7 +38,7 @@
 
 		function resetTodo() {
 			TC.level = 2;
-			TC.newTodo = {title: '',level: TC.level, completed: false};
+			TC.newTodo = {text: '',level: TC.level, complete: false};
 			TC.showLevels = false
 		}
 
@@ -51,12 +51,12 @@
 		TC.location = $location;
 
 		$scope.$watch('TC.location.path()', function (path) {
-			TC.statusFilter = { '/active': {completed: false}, '/completed': {completed: true} }[path];
+			TC.statusFilter = { '/active': {complete: false}, '/completed': {complete: true} }[path];
 		});
 
 		// 3rd argument `true` for deep object watching
 		$scope.$watch('TC.todos', function () {
-			TC.remainingCount = todos.filter(function (todo) { return !todo.completed; }).length;
+			TC.remainingCount = todos.filter(function (todo) { return !todo.complete; }).length;
 			TC.allChecked = (TC.remainingCount === 0);
 
 			// Save any changes to localStorage
@@ -64,8 +64,8 @@
 		}, true);
 
 		TC.addTodo = function () {
-			var newTitle = TC.newTodo.title = TC.newTodo.title.trim();
-			if (newTitle.length === 0) {
+			var newText = TC.newTodo.text = TC.newTodo.text.trim();
+			if (newText.length === 0) {
 				return;
 			}
 			TC.newTodo.level = TC.level;
@@ -83,7 +83,7 @@
 
 		TC.doneEditing = function (todo, index) {
 			TC.editedTodo = {};
-			todo.title = todo.title.trim();
+			todo.text = todo.text.trim();
 
 			if (!todo.title) {
 				TC.removeTodo(index);
@@ -101,13 +101,13 @@
 
 		TC.clearCompletedTodos = function () {
 			TC.todos = todos = todos.filter(function (val) {
-				return !val.completed;
+				return !val.complete;
 			});
 		};
 
-		TC.markAll = function (completed) {
+		TC.markAll = function (complete) {
 			todos.forEach(function (todo) {
-				todo.completed = completed;
+				todo.complete = complete;
 			});
 		};
 
