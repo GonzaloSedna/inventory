@@ -16,25 +16,29 @@
 	 * - retrieves and persists the model via the todoStorage service
 	 * - exposes the model to the template and provides event handlers
 	 */
-	.controller('TodoCtrl', function TodoCtrl($scope, $location, $http, todoStorage) {
+	.controller('TodoCtrl', function TodoCtrl($scope, $location, $http, $timeout) {
 		var TC = this;
-		var todos = TC.todos = todoStorage.get();
+		var todos = TC.todos;
 
 		TC.ESCAPE_KEY = 27;
 		TC.editedTodo = {};
+		TC.editedLevelTodo = {};
 		TC.levels = [1, 2, 3, 4];
 		TC.showLevels = false;
 		TC.level = 2;
+		TC.formData = {};
+		TC.editingLevel = false;
 
 		// Get all todos
 	    $http.get('https://blooming-falls-2697.herokuapp.com/api/v1/todos')
 	        .success(function(data) {
-	            TC.todos = data;
+	            todos = TC.todos = data;
 	            console.log(data);
 	        })
 	        .error(function(error) {
 	            console.log('Error: ' + error);
-	        });
+	        }
+	    );
 
 		function resetTodo() {
 			TC.level = 2;
@@ -56,11 +60,12 @@
 
 		// 3rd argument `true` for deep object watching
 		$scope.$watch('TC.todos', function () {
+			if(!todos){return;}
 			TC.remainingCount = todos.filter(function (todo) { return !todo.complete; }).length;
 			TC.allChecked = (TC.remainingCount === 0);
-
+			
 			// Save any changes to localStorage
-			todoStorage.put(todos);
+			//todoStorage.put(todos);
 		}, true);
 
 		TC.addTodo = function () {
@@ -69,6 +74,19 @@
 				return;
 			}
 			TC.newTodo.level = TC.level;
+
+			TC.formData = {'text': newText, complete: false, level: TC.level};
+
+			// Create a new todo
+			$http.post('https://blooming-falls-2697.herokuapp.com/api/v1/todos', TC.formData)
+			    .success(function(data) {
+			        TC.formData = {};
+			        todos = TC.todos = data;
+			    })
+			    .error(function(error) {
+			        console.log('Error: ' + error);
+			    }
+			);
 
 			todos.push(TC.newTodo);
 			resetTodo();
@@ -81,14 +99,36 @@
 			TC.originalTodo = angular.copy(todo);
 		};
 
+		TC.editLevelTodo = function (todo) {
+			TC.editedLevelTodo = todo;
+
+			// Clone the original todo to restore it on demand.
+			TC.originalTodo = angular.copy(todo);
+		};
+
 		TC.doneEditing = function (todo, index) {
 			TC.editedTodo = {};
 			todo.text = todo.text.trim();
 
-			if (!todo.title) {
+			if (!todo.text) {
 				TC.removeTodo(index);
+			} else {
+				// Update a todo
+				$http.put('https://blooming-falls-2697.herokuapp.com/api/v1/todos/' + index, todo)
+				    .success(function(data) {
+				        TC.formData = {};
+				        todos = TC.todos = data;
+				    })
+				    .error(function(error) {
+				        console.log('Error: ' + error);
+				    }
+				);
 			}
 		};
+
+		TC.doneEditingLevel = function() {
+			TC.editedLevelTodo ={};
+		}
 
 		TC.revertEditing = function (index) {
 			TC.editedTodo = {};
@@ -96,7 +136,17 @@
 		};
 
 		TC.removeTodo = function (index) {
-			todos.splice(index, 1);
+			//todos.splice(index, 1);
+
+			// Delete a todo
+			$http.delete('https://blooming-falls-2697.herokuapp.com/api/v1/todos/' + index)
+			    .success(function(data) {
+			        todos = TC.todos = data;
+			    })
+			    .error(function(data) {
+			        console.log('Error: ' + data);
+			    }
+			);
 		};
 
 		TC.clearCompletedTodos = function () {
@@ -114,6 +164,26 @@
 		TC.setLevel = function(level) {
 			TC.level = level;
 			TC.showLevels = !TC.showLevels;
+		}
+
+		TC.updateLevel = function(level, todo) {
+			// TC.level = level;
+			// TC.showLevels = !TC.showLevels;
+			// 
+			
+			todo.level = level;
+			// Update a todo
+			$http.put('https://blooming-falls-2697.herokuapp.com/api/v1/todos/' + todo.id, todo)
+			    .success(function(data) {
+			        TC.formData = {};
+			        todos = TC.todos = data;
+			    })
+			    .error(function(error) {
+			        console.log('Error: ' + error);
+			    }
+			);
+			    
+			doneEditingLevel();
 		}
 	});
 })();

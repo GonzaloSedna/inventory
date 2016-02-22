@@ -38,27 +38,41 @@
 				<label for="toggle-all">Finish all</label>
 				<ul id="todo-list">
 					<li ng-repeat="todo in TC.todos | filter:TC.statusFilter track by $index" 
-						ng-class="{completed: todo.complete, editing: todo === TC.editedTodo}">
+						ng-class="{completed: todo.complete, editing: todo === TC.editedTodo, editingLevel: todo === TC.editedLevelTodo}">
 						<div class="view">
 							<input class="toggle" type="checkbox" ng-model="todo.complete">
 							<label ng-dblclick="TC.editTodo(todo)">{{todo.text}}</label>
-							<span><i class="fa fa-battery-{{todo.level}}"></i></span>
-							<button class="destroy" ng-click="TC.removeTodo($index)"></button>
+							<span ng-click="TC.editLevelTodo(todo)">
+								  <i class="fa fa-battery-{{todo.level}}"></i>
+							</span>
+							<button class="destroy" ng-click="TC.removeTodo(todo.id)"></button>
 						</div>
-						<form ng-submit="TC.doneEditing(todo, $index)">
+						<form ng-submit="TC.doneEditing(todo, todo.id)">
 							<input class="edit" 
 								ng-trim="false" 
 								ng-model="todo.text" 
-								ng-blur="TC.doneEditing(todo, $index)" 
-								ng-keydown="($event.keyCode === TC.ESCAPE_KEY) && TC.revertEditing($index)" 
+								ng-blur="TC.doneEditing(todo, todo.id)" 
+								ng-keydown="($event.keyCode === TC.ESCAPE_KEY) && TC.revertEditing(todo.id)" 
 								todo-focus="todo === TC.editedTodo">
+							<div id="level-select" class="editLevel" ng-class="{'active': TC.showLevels}" ng-mouseleave="TC.doneEditingLevel()">
+								<div
+								  class="level-select-wrapper"
+								  ng-repeat="l in TC.levels"
+								  ng-click="TC.updateLevel(l, todo)"
+								  ng-blur="TC.doneEditing(todo, todo.id)"
+								  >
+								    <span class="level">
+								    	<i class="fa fa-battery-{{l}}"></i>
+								    </span>
+								</div>
+							</div>
 						</form>
 					</li>
 				</ul>
 			</section>
 			<footer id="footer" ng-show="TC.todos.length" ng-cloak>
 				<span id="todo-count"><strong>{{TC.remainingCount}}</strong>
-					<ng-pluralize count="TC.remainingCount" when="{ one: 'thing to use', other: 'things to use' }"></ng-pluralize>
+					<ng-pluralize count="TC.remainingCount" when="{ one: 'ingredient to use', other: 'ingredients to use' }"></ng-pluralize>
 				</span>
 				<ul id="filters">
 					<li>
@@ -76,7 +90,7 @@
 		</section>
 		<footer id="info">
 			<p>Double-click to edit an item</p>
-			<p>Based in <a href="http://todomvc.com" target="_blank">TodoMVC</a></p>
+			<p>Based in <a href="http://todomvc.com/examples/angularjs/#/" target="_blank">TodoMVC</a></p>
 		</footer>
 		<script src="node_modules/todomvc-common/base.js"></script>
 		<script src="node_modules/angular/angular.js"></script>

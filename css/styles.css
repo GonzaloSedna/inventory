@@ -1,6 +1,6 @@
 #header h1{font-size: 80px;top: -130px;}
-#header #todo-form #new-todo {display:inline-block;width:90%;}
-#header #todo-form #use-level {display:inline-block;cursor:pointer;color: #d9d9d9;}
+#header #todo-form #new-todo {display:inline-block;width:89%;}
+#header #todo-form #use-level {display:inline-block;cursor:pointer;color: #d9d9d9;font-size: 1.5em;}
 #header #todo-form #use-level:hover{color: #898989}
 
 #header #todo-form #level-select{
@@ -30,3 +30,41 @@
 #main #todo-list li label{display:inline-block;width:67%;}
 #main #todo-list li span{display:inline-block;font-size: .7em;opacity: .7;vertical-align: middle;}
 #main #todo-list li button{right: -10px;top: -10px;bottom:auto;}
+
+#todo-list li.editing .edit {
+    width: 430px;
+    display:inline-block;
+}
+
+#todo-list li span {
+    cursor:pointer;
+}
+
+#todo-list li.completed span {
+    color: #d9d9d9;
+}
+
+#todo-list li .editLevel {
+    display:none;
+}
+
+#todo-list li.editingLevel .editLevel {
+    display: inline-block;
+    position:absolute;
+    right: 15px;
+    top: 14px;
+    padding: 5px 17px;
+    margin-left: 5px;
+    border: 1px solid #c9c9c9;
+    background-color: #fefefd;
+    z-index: 5;
+    border-radius: 3px;
+}
+
+#todo-list li.editingLevel .editLevel .level-select-wrapper{
+    cursor:pointer;
+}
+
+#todo-list form #level-select {
+
+}
